@@ -3,4 +3,4 @@
 	url = https://github.com/kevquirk/simple.css.git
 [submodule "js/qrcode"]
 	path = js/qrcode
-	url = https://github.com/kevquirk/simple.css.git
+	url = https://github.com/davidshimjs/qrcodejs.git

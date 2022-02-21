@@ -21,19 +21,21 @@ function addHunter() {
 }
 
 function code(element, data) {
-  var code = codes[element.id];
+  var code = codes[element];
 
   if (code == null) {
-    var code = new QRCode(element, {height: 200, width: 200});
+    var code = new QRCode(element, {height: 100, width: 100});
 
-    codes[element.id] = code;
+    codes[element] = code;
   }
 
   code.makeCode(data);
 }
 
 function initCompetition() {
-  document.getElementById("competition-description").addEventListener("keyup", (event) => {
+  var element = document.getElementById("competition");
+
+  lookup(element, "description").addEventListener("keyup", (event) => {
     updateCompetition();
   });
 
@@ -70,6 +72,10 @@ function initHunters() {
   });
 }
 
+function lookup(element, key) {
+  return element.getElementsByClassName(key)[0]
+}
+
 function navigate(id) {
   ["competition", "eggs", "hunters"].forEach((section) => {
     document.getElementById(section).classList.remove("current");
@@ -81,14 +87,15 @@ function navigate(id) {
 }
 
 function updateCompetition() {
-  var element = document.getElementById("competition-code");
+  var element = document.getElementById("competition");
 
   var data = JSON.stringify({
-    'd': document.getElementById("competition-description").value,
+    'd': lookup(element, "description").value,
+    'i': lookup(element, "id").value,
     't': 'competition'
   });
 
-  code(element, data);
+  code(lookup(element, "code"), data);
 }
 
 function updateEgg(element) {

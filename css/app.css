@@ -12,9 +12,13 @@ nav a.current {
 }
 
 .code {
-  height: 200px;
-  padding-top: 2rem;
-  width: 200px;
+  height: 100px;
+  padding-top: 1rem;
+  width: 100px;
+}
+
+.debug {
+  display: block;
 }
 
 .section, .template {

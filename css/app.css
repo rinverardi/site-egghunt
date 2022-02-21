@@ -1,0 +1,38 @@
+div.current {
+  display: block;
+}
+
+input {
+  width: 100%;
+}
+
+nav a.current {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.code {
+  height: 200px;
+  padding-top: 2rem;
+  width: 200px;
+}
+
+.section, .template {
+  display: none;
+}
+
+@media print {
+  header, input[type=button] {
+    display: none;
+  }
+
+  input {
+    border: 0;
+    outline: none;
+    padding: 0;
+  }
+
+  #competition, #eggs, #hunters {
+    display: block;
+  }
+}

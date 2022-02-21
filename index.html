@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html lang="de-CH">
+  <head>
+    <link href="css/simple/simple.css" rel="stylesheet">
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width">
+    <script src="js/qrcode/qrcode.js" type="text/javascript"></script>
+    <script>
+      var competition_code;
+
+      function navigate(id) {
+        ["competition", "eggs", "hunters"].forEach((section) => {
+          document.getElementById(section).classList.remove("current");
+          document.getElementById(section + "-link").classList.remove("current");
+        });
+
+        document.getElementById(id).classList.add("current");
+        document.getElementById(id + "-link").classList.add("current");
+      }
+
+      function update_competition() {
+        if (competition_code == null) {
+          competition_code = new QRCode(document.getElementById("competition-code"), {
+            height: 200,
+            width: 200
+          });
+        }
+
+        var competition_data = JSON.stringify({
+          'd': document.getElementById("competition-description").value,
+          't': 'competition'
+        });
+
+        competition_code.makeCode(competition_data);
+      }
+
+      window.addEventListener("load", (event) => {
+        document.getElementById("competition-description").addEventListener("blur", (event) => {
+          update_competition();
+        });
+
+        ["competition", "eggs", "hunters"].forEach((section) => {
+          document.getElementById(section + "-link").addEventListener("click", (event) => {
+            navigate(section);
+
+            return false;
+          });
+        });
+
+        update_competition();
+      });
+    </script>
+    <style>
+      body div.current {
+        display: block;
+      }
+
+      input {
+        width: 100%;
+      }
+
+      nav a.current {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .code {
+        height: 200px;
+        padding-top: 2rem;
+        width: 200px;
+      }
+
+      .section {
+        display: none;
+      }
+
+      @media print {
+        header, input[type=button] {
+          display: none;
+        }
+
+        input {
+          border: 0;
+          outline: none;
+          padding: 0;
+        }
+
+        #competition, #eggs, #hunters {
+          display: block;
+        }
+      }
+    </style>
+    <title>Eiersuche</title>
+  </head>
+  <body>
+    <header>
+      <h3>Eiersuche</h3>
+
+      <nav>
+        <a class="current" id="competition-link">Anlass</a>
+        <a id="eggs-link">Eier</a>
+        <a id="hunters-link">Sammler</a>
+      </nav>
+    </header>
+
+    <div class="current section" id="competition">
+      <h3>Anlass</h3>
+
+      <input placeholder="Beschreibung" id="competition-description">
+
+      <div class="code" id="competition-code"></div>
+    </div>
+
+    <div class="section" id="eggs">
+      <h3>Eier</h3>
+
+      <input type="button" value="Hinzufügen">
+    </div>
+
+    <div class="section" id="hunters">
+      <h3>Sammler</h3>
+
+      <input type="button" value="Hinzufügen">
+    </div>
+  </body>
+</html>

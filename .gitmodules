@@ -1,0 +1,6 @@
+[submodule "css/simple"]
+	path = css/simple
+	url = https://github.com/kevquirk/simple.css.git
+[submodule "js/qrcode"]
+	path = js/qrcode
+	url = https://github.com/kevquirk/simple.css.git

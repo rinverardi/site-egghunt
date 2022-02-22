@@ -1,109 +1,170 @@
 var codes = {};
 
 function addEgg() {
-  var button = document.getElementById("add-egg")
+  var sectionElement = document.getElementById("eggs");
 
-  var clone = document.getElementById("egg-template").cloneNode(true);
+  var eggElement = lookup(sectionElement, "template").cloneNode(true);
 
-  clone.addEventListener("keyup", (event) => {
-    updateEgg(clone);
+  eggElement.addEventListener("keyup", (event) => {
+    updateEgg(eggElement);
   });
 
-  clone.classList.remove("template");
+  eggElement.classList.remove("template");
 
-  button.parentNode.insertBefore(clone, button);
+  var buttonElement = lookup(sectionElement, "button");
 
-  clone.childNodes[1].focus()
+  buttonElement.parentNode.insertBefore(eggElement, buttonElement);
+
+  lookup(eggElement, "description").focus();
+  lookup(eggElement, "tag").value = tag();
+
+  updateEgg(eggElement);
 }
 
 function addHunter() {
-  console.log("XXX");
+  var sectionElement = document.getElementById("hunters");
+
+  var hunterElement = lookup(sectionElement, "template").cloneNode(true);
+
+  hunterElement.addEventListener("keyup", (event) => {
+    updateHunter(hunterElement);
+  });
+
+  hunterElement.classList.remove("template");
+
+  var buttonElement = lookup(sectionElement, "button");
+
+  buttonElement.parentNode.insertBefore(hunterElement, buttonElement);
+
+  lookup(hunterElement, "description").focus();
+  lookup(hunterElement, "tag").value = tag();
+
+  updateHunter(hunterElement);
 }
 
-function code(element, data) {
-  var code = codes[element];
+function code(codeElement, data) {
+  if (codeElement.id == null || codeElement.id == "") {
+    codeElement.id = tag();
+  }
+
+  var code = codes[codeElement.id];
 
   if (code == null) {
-    var code = new QRCode(element, {height: 100, width: 100});
+    var code = new QRCode(codeElement, {height: 100, width: 100});
 
-    codes[element] = code;
+    codes[codeElement.id] = code;
   }
 
   code.makeCode(data);
+
+  console.log(codes);
 }
 
 function initCompetition() {
-  var element = document.getElementById("competition");
+  var sectionElement = document.getElementById("competition");
 
-  lookup(element, "description").addEventListener("keyup", (event) => {
+  lookup(sectionElement, "description").addEventListener("keyup", (event) => {
     updateCompetition();
   });
 
-  document.getElementById("competition-link").addEventListener("click", (event) => {
-    navigate("competition");
-
-    return false;
-  });
+  lookup(sectionElement, "tag").value = tag()
 
   updateCompetition();
 }
 
 function initEggs() {
-  document.getElementById("add-egg").addEventListener("click", (event) => {
+  var sectionElement = document.getElementById("eggs");
+
+  lookup(sectionElement, "button").addEventListener("click", (event) => {
     addEgg();
-  });
-
-  document.getElementById("eggs-link").addEventListener("click", (event) => {
-    navigate("eggs");
-
-    return false;
   });
 }
 
 function initHunters() {
-  document.getElementById("add-hunter").addEventListener("click", (event) => {
+  var sectionElement = document.getElementById("hunters");
+
+  lookup(sectionElement, "button").addEventListener("click", (event) => {
     addHunter();
   });
+}
 
-  document.getElementById("hunters-link").addEventListener("click", (event) => {
-    navigate("hunters");
+function initNavigation() {
+  var nav = document.getElementsByTagName("nav")[0];
 
-    return false;
+  ["competition", "eggs", "hunters"].forEach((section) => {
+    lookup(nav, section).addEventListener("click", (event) => {
+      navigate(section);
+    });
   });
 }
 
 function lookup(element, key) {
-  return element.getElementsByClassName(key)[0]
+  return element.getElementsByClassName(key)[0];
 }
 
-function navigate(id) {
+function navigate(section) {
+  var nav = document.getElementsByTagName("nav")[0];
+
   ["competition", "eggs", "hunters"].forEach((section) => {
-    document.getElementById(section).classList.remove("current");
-    document.getElementById(section + "-link").classList.remove("current");
+    lookup(nav, section).classList.remove("current");
+    document.getElementById(section).classList.add("hidden");
   });
 
-  document.getElementById(id).classList.add("current");
-  document.getElementById(id + "-link").classList.add("current");
+  lookup(nav, section).classList.add("current");
+  document.getElementById(section).classList.remove("hidden");
+}
+
+function tag() {
+  let chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  let tag = ""
+
+  while (tag.length < 6) {
+    tag += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+
+  return tag
 }
 
 function updateCompetition() {
-  var element = document.getElementById("competition");
+  var competitionElement = document.getElementById("competition");
 
   var data = JSON.stringify({
-    'd': lookup(element, "description").value,
-    'i': lookup(element, "id").value,
-    't': 'competition'
+    "cd": lookup(competitionElement, "description").value,
+    "ct": lookup(competitionElement, "tag").value
   });
 
-  code(lookup(element, "code"), data);
+  code(lookup(competitionElement, "code"), data);
 }
 
-function updateEgg(element) {
-  console.log(element);
+function updateEgg(eggElement) {
+  var competitionElement = document.getElementById("competition");
+
+  var data = JSON.stringify({
+    "cd": lookup(competitionElement, "description").value,
+    "ct": lookup(competitionElement, "tag").value,
+    "ed": lookup(eggElement, "description").value,
+    "et": lookup(eggElement, "tag").value
+  });
+
+  code(lookup(eggElement, "code"), data);
+}
+
+function updateHunter(hunterElement) {
+  var competitionElement = document.getElementById("competition");
+
+  var data = JSON.stringify({
+    "cd": lookup(competitionElement, "description").value,
+    "ct": lookup(competitionElement, "tag").value,
+    "hd": lookup(hunterElement, "description").value,
+    "ht": lookup(hunterElement, "tag").value
+  });
+
+  code(lookup(hunterElement, "code"), data);
 }
 
 window.addEventListener("load", (event) => {
   initCompetition();
   initEggs();
   initHunters();
+  initNavigation();
 });

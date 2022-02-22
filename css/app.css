@@ -3,6 +3,7 @@ div.current {
 }
 
 input {
+  margin: 0.5rem 0;
   width: 100%;
 }
 
@@ -13,19 +14,19 @@ nav a.current {
 
 .code {
   height: 100px;
-  padding-top: 1rem;
+  margin: 0.5rem 0;
   width: 100px;
 }
 
-.debug {
-  display: block;
-}
-
-.section, .template {
+.hidden, .tag, .template {
   display: none;
 }
 
 @media print {
+  h5 {
+    margin: 1rem 0;
+  }
+
   header, input[type=button] {
     display: none;
   }

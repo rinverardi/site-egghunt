@@ -15,41 +15,45 @@
       <h3>Eiersuche</h3>
 
       <nav>
-        <a class="current" id="competition-link">Anlass</a>
-        <a id="eggs-link">Eier</a>
-        <a id="hunters-link">Sammler</a>
+        <a class="competition current" href="#">Anlass</a>
+        <a class="eggs" href="#">Eier</a>
+        <a class="hunters" href="#">Sammler</a>
       </nav>
     </header>
 
-    <div class="current section" id="competition">
-      <h3>Anlass</h3>
+    <div id="competition">
+      <h5>Anlass</h5>
 
       <input class="description" placeholder="Beschreibung"></input>
-      <input class="debug id" disabled></input>
+      <input class="tag" disabled></input>
 
       <div class="code"></div>
     </div>
 
-    <div class="section" id="eggs">
-      <h3>Eier</h3>
+    <div class="hidden" id="eggs">
+      <h5>Eier</h5>
 
-      <div class="template" id="egg-template">
+      <div class="template">
         <input class="description" placeholder="Beschreibung"></input>
-        <input class="debug id" disabled></input>
+        <input class="tag" disabled></input>
+
+        <div class="code"></div>
       </div>
 
-      <input id="add-egg" type="button" value="Hinzufügen"></input>
+      <input class="button" type="button" value="Hinzufügen"></input>
     </div>
 
-    <div class="section" id="hunters">
-      <h3>Sammler</h3>
+    <div class="hidden" id="hunters">
+      <h5>Sammler</h5>
 
-      <div class="template" id="hunter-template">
+      <div class="template">
         <input class="description" placeholder="Beschreibung"></input>
-        <input class="debug id" disabled></input>
+        <input class="tag" disabled></input>
+
+        <div class="code"></div>
       </div>
 
-      <input id="add-hunter" type="button" value="Hinzufügen"></input>
+      <input class="button" type="button" value="Hinzufügen"></input>
     </div>
   </body>
 </html>

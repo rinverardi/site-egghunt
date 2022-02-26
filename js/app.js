@@ -1,9 +1,10 @@
-var codes = {};
+let codes = {};
+let timer;
 
 function addEgg() {
-  var sectionElement = document.getElementById("eggs");
+  let sectionElement = document.getElementById("eggs");
 
-  var eggElement = lookup(sectionElement, "template").cloneNode(true);
+  let eggElement = lookup(sectionElement, "template").cloneNode(true);
 
   eggElement.addEventListener("keyup", (event) => {
     updateEgg(eggElement);
@@ -11,7 +12,7 @@ function addEgg() {
 
   eggElement.classList.remove("template");
 
-  var buttonElement = lookup(sectionElement, "button");
+  let buttonElement = lookup(sectionElement, "button");
 
   buttonElement.parentNode.insertBefore(eggElement, buttonElement);
 
@@ -22,9 +23,9 @@ function addEgg() {
 }
 
 function addHunter() {
-  var sectionElement = document.getElementById("hunters");
+  let sectionElement = document.getElementById("hunters");
 
-  var hunterElement = lookup(sectionElement, "template").cloneNode(true);
+  let hunterElement = lookup(sectionElement, "template").cloneNode(true);
 
   hunterElement.addEventListener("keyup", (event) => {
     updateHunter(hunterElement);
@@ -32,7 +33,7 @@ function addHunter() {
 
   hunterElement.classList.remove("template");
 
-  var buttonElement = lookup(sectionElement, "button");
+  let buttonElement = lookup(sectionElement, "button");
 
   buttonElement.parentNode.insertBefore(hunterElement, buttonElement);
 
@@ -43,25 +44,29 @@ function addHunter() {
 }
 
 function code(codeElement, data) {
-  if (codeElement.id == null || codeElement.id == "") {
-    codeElement.id = tag();
-  }
+  let tag = lookup(codeElement.parentNode, "tag").value;
 
-  var code = codes[codeElement.id];
+  let code = codes[tag];
 
   if (code == null) {
-    var code = new QRCode(codeElement, {height: 100, width: 100});
+    code = new QRCode(codeElement, {height: 100, width: 100});
 
-    codes[codeElement.id] = code;
+    codes[tag] = code;
   }
 
   code.makeCode(data);
+}
 
-  console.log(codes);
+function debounce(action) {
+  if (timer != null) {
+    clearTimeout(timer);
+  }
+
+  timer = setTimeout(action, 1000);
 }
 
 function initCompetition() {
-  var sectionElement = document.getElementById("competition");
+  let sectionElement = document.getElementById("competition");
 
   lookup(sectionElement, "description").addEventListener("keyup", (event) => {
     updateCompetition();
@@ -73,7 +78,7 @@ function initCompetition() {
 }
 
 function initEggs() {
-  var sectionElement = document.getElementById("eggs");
+  let sectionElement = document.getElementById("eggs");
 
   lookup(sectionElement, "button").addEventListener("click", (event) => {
     addEgg();
@@ -81,7 +86,7 @@ function initEggs() {
 }
 
 function initHunters() {
-  var sectionElement = document.getElementById("hunters");
+  let sectionElement = document.getElementById("hunters");
 
   lookup(sectionElement, "button").addEventListener("click", (event) => {
     addHunter();
@@ -89,10 +94,10 @@ function initHunters() {
 }
 
 function initNavigation() {
-  var nav = document.getElementsByTagName("nav")[0];
+  let navElement = document.getElementsByTagName("nav")[0];
 
   ["competition", "eggs", "hunters"].forEach((section) => {
-    lookup(nav, section).addEventListener("click", (event) => {
+    lookup(navElement, section).addEventListener("click", (event) => {
       navigate(section);
     });
   });
@@ -103,14 +108,14 @@ function lookup(element, key) {
 }
 
 function navigate(section) {
-  var nav = document.getElementsByTagName("nav")[0];
+  let navElement = document.getElementsByTagName("nav")[0];
 
   ["competition", "eggs", "hunters"].forEach((section) => {
-    lookup(nav, section).classList.remove("current");
+    lookup(navElement, section).classList.remove("current");
     document.getElementById(section).classList.add("hidden");
   });
 
-  lookup(nav, section).classList.add("current");
+  lookup(navElement, section).classList.add("current");
   document.getElementById(section).classList.remove("hidden");
 }
 
@@ -126,20 +131,25 @@ function tag() {
 }
 
 function updateCompetition() {
-  var competitionElement = document.getElementById("competition");
+  let competitionElement = document.getElementById("competition");
 
-  var data = JSON.stringify({
+  let data = JSON.stringify({
     "cd": lookup(competitionElement, "description").value,
     "ct": lookup(competitionElement, "tag").value
   });
 
   code(lookup(competitionElement, "code"), data);
+
+  debounce(() => {
+    updateEggs();
+    updateHunters();
+  });
 }
 
 function updateEgg(eggElement) {
-  var competitionElement = document.getElementById("competition");
+  let competitionElement = document.getElementById("competition");
 
-  var data = JSON.stringify({
+  let data = JSON.stringify({
     "cd": lookup(competitionElement, "description").value,
     "ct": lookup(competitionElement, "tag").value,
     "ed": lookup(eggElement, "description").value,
@@ -149,10 +159,22 @@ function updateEgg(eggElement) {
   code(lookup(eggElement, "code"), data);
 }
 
-function updateHunter(hunterElement) {
-  var competitionElement = document.getElementById("competition");
+function updateEggs() {
+  let eggsElement = document.getElementById("eggs");
 
-  var data = JSON.stringify({
+  Array.from(eggsElement.getElementsByClassName("code")).forEach((codeElement) => {
+    let eggElement = codeElement.parentNode;
+
+    if (!eggElement.classList.contains("template")) {
+      updateEgg(eggElement);
+    }
+  });
+}
+
+function updateHunter(hunterElement) {
+  let competitionElement = document.getElementById("competition");
+
+  let data = JSON.stringify({
     "cd": lookup(competitionElement, "description").value,
     "ct": lookup(competitionElement, "tag").value,
     "hd": lookup(hunterElement, "description").value,
@@ -160,6 +182,18 @@ function updateHunter(hunterElement) {
   });
 
   code(lookup(hunterElement, "code"), data);
+}
+
+function updateHunters() {
+  let huntersElement = document.getElementById("hunters");
+
+  Array.from(huntersElement.getElementsByClassName("code")).forEach((codeElement) => {
+    let hunterElement = codeElement.parentNode;
+
+    if (!hunterElement.classList.contains("template")) {
+      updateHunter(hunterElement);
+    }
+  });
 }
 
 window.addEventListener("load", (event) => {

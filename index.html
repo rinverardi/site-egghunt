@@ -2,58 +2,85 @@
 
 <html lang="de-CH">
   <head>
-    <link href="css/simple/simple.css" rel="stylesheet">
-    <link href="css/app.css" rel="stylesheet">
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, width=device-width">
+
+    <!--
+    https://github.com/davidshimjs/qrcodejs
+    -->
+
     <script src="js/qrcode/qrcode.js" type="text/javascript"></script>
+
+    <!--
+    https://necolas.github.io/normalize.css/
+    -->
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"></link>
+
+    <!--
+    https://milligram.io/
+    -->
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"></link>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css"></link>
+
+    <link href="css/app.css" rel="stylesheet"></link>
     <script src="js/app.js" type="text/javascript"></script>
     <title>Eiersuche</title>
   </head>
   <body>
-    <header>
-      <h3>Eiersuche</h3>
+    <div class="container">
+      <h1>Eiersuche</h1>
 
-      <nav>
-        <a class="competition current" href="#">Anlass</a>
-        <a class="eggs" href="#">Eier</a>
-        <a class="hunters" href="#">Sammler</a>
-      </nav>
-    </header>
+      <div id="competition">
+        <h2>Anlass</h2>
 
-    <div id="competition">
-      <h5>Anlass</h5>
-
-      <input class="description" placeholder="Beschreibung"></input>
-      <input class="tag" disabled></input>
-
-      <div class="code"></div>
-    </div>
-
-    <div class="hidden" id="eggs">
-      <h5>Eier</h5>
-
-      <div class="template">
-        <input class="description" placeholder="Beschreibung"></input>
-        <input class="tag" disabled></input>
-
-        <div class="code"></div>
+        <div class="row">
+          <div class="column column-80">
+            <input class="description" placeholder="Beschreibung"></input>
+          </div>
+          <div class="column column-20">
+            <div class="code"></div>
+            <input class="tag" type="hidden"></input>
+          </div>
+        </div>
       </div>
 
-      <input class="button" type="button" value="Hinzufügen"></input>
-    </div>
+      <div id="eggs">
+        <h2>Eier</h2>
 
-    <div class="hidden" id="hunters">
-      <h5>Sammler</h5>
+        <div class="template">
+          <div class="row">
+            <div class="column column-80">
+              <input class="description" placeholder="Beschreibung"></input>
+            </div>
+            <div class="column column-20">
+              <div class="code"></div>
+              <input class="tag" type="hidden"></input>
+            </div>
+          </div>
+        </div>
 
-      <div class="template">
-        <input class="description" placeholder="Beschreibung"></input>
-        <input class="tag" disabled></input>
-
-        <div class="code"></div>
+        <button>Hinzufügen</button>
       </div>
 
-      <input class="button" type="button" value="Hinzufügen"></input>
+      <div id="hunters">
+        <h2>Sammler</h2>
+
+        <div class="template">
+          <div class="row">
+            <div class="column column-80">
+              <input class="description" placeholder="Beschreibung"></input>
+            </div>
+            <div class="column column-20">
+              <div class="code"></div>
+              <input class="tag" type="hidden"></input>
+            </div>
+          </div>
+        </div>
+
+        <button>Hinzufügen</button>
+      </div>
     </div>
   </body>
 </html>

@@ -4,7 +4,7 @@ let timer;
 function addEgg() {
   let sectionElement = document.getElementById("eggs");
 
-  let eggElement = lookup(sectionElement, "template").cloneNode(true);
+  let eggElement = lookupByClass(sectionElement, "template").cloneNode(true);
 
   eggElement.addEventListener("keyup", (event) => {
     updateEgg(eggElement);
@@ -12,12 +12,12 @@ function addEgg() {
 
   eggElement.classList.remove("template");
 
-  let buttonElement = lookup(sectionElement, "button");
+  let buttonElement = lookupByTag(sectionElement, "button");
 
   buttonElement.parentNode.insertBefore(eggElement, buttonElement);
 
-  lookup(eggElement, "description").focus();
-  lookup(eggElement, "tag").value = tag();
+  lookupByClass(eggElement, "description").focus();
+  lookupByClass(eggElement, "tag").value = tag();
 
   updateEgg(eggElement);
 }
@@ -25,7 +25,7 @@ function addEgg() {
 function addHunter() {
   let sectionElement = document.getElementById("hunters");
 
-  let hunterElement = lookup(sectionElement, "template").cloneNode(true);
+  let hunterElement = lookupByClass(sectionElement, "template").cloneNode(true);
 
   hunterElement.addEventListener("keyup", (event) => {
     updateHunter(hunterElement);
@@ -33,18 +33,18 @@ function addHunter() {
 
   hunterElement.classList.remove("template");
 
-  let buttonElement = lookup(sectionElement, "button");
+  let buttonElement = lookupByTag(sectionElement, "button");
 
   buttonElement.parentNode.insertBefore(hunterElement, buttonElement);
 
-  lookup(hunterElement, "description").focus();
-  lookup(hunterElement, "tag").value = tag();
+  lookupByClass(hunterElement, "description").focus();
+  lookupByClass(hunterElement, "tag").value = tag();
 
   updateHunter(hunterElement);
 }
 
 function code(codeElement, data) {
-  let tag = lookup(codeElement.parentNode, "tag").value;
+  let tag = lookupByClass(codeElement.parentNode, "tag").value;
 
   let code = codes[tag];
 
@@ -68,11 +68,11 @@ function debounce(action) {
 function initCompetition() {
   let sectionElement = document.getElementById("competition");
 
-  lookup(sectionElement, "description").addEventListener("keyup", (event) => {
+  lookupByClass(sectionElement, "description").addEventListener("keyup", (event) => {
     updateCompetition();
   });
 
-  lookup(sectionElement, "tag").value = tag()
+  lookupByClass(sectionElement, "tag").value = tag()
 
   updateCompetition();
 }
@@ -80,7 +80,7 @@ function initCompetition() {
 function initEggs() {
   let sectionElement = document.getElementById("eggs");
 
-  lookup(sectionElement, "button").addEventListener("click", (event) => {
+  lookupByTag(sectionElement, "button").addEventListener("click", (event) => {
     addEgg();
   });
 }
@@ -88,34 +88,28 @@ function initEggs() {
 function initHunters() {
   let sectionElement = document.getElementById("hunters");
 
-  lookup(sectionElement, "button").addEventListener("click", (event) => {
+  lookupByTag(sectionElement, "button").addEventListener("click", (event) => {
     addHunter();
   });
 }
 
-function initNavigation() {
-  let navElement = document.getElementsByTagName("nav")[0];
-
-  ["competition", "eggs", "hunters"].forEach((section) => {
-    lookup(navElement, section).addEventListener("click", (event) => {
-      navigate(section);
-    });
-  });
+function lookupByClass(element, className) {
+  return element.getElementsByClassName(className)[0];
 }
 
-function lookup(element, key) {
-  return element.getElementsByClassName(key)[0];
+function lookupByTag(element, tagName) {
+  return element.getElementsByTagName(tagName)[0];
 }
 
 function navigate(section) {
   let navElement = document.getElementsByTagName("nav")[0];
 
   ["competition", "eggs", "hunters"].forEach((section) => {
-    lookup(navElement, section).classList.remove("current");
+    lookupByClass(navElement, section).classList.remove("current");
     document.getElementById(section).classList.add("hidden");
   });
 
-  lookup(navElement, section).classList.add("current");
+  lookupByClass(navElement, section).classList.add("current");
   document.getElementById(section).classList.remove("hidden");
 }
 
@@ -134,11 +128,11 @@ function updateCompetition() {
   let competitionElement = document.getElementById("competition");
 
   let data = JSON.stringify({
-    "cd": lookup(competitionElement, "description").value,
-    "ct": lookup(competitionElement, "tag").value
+    "cd": lookupByClass(competitionElement, "description").value,
+    "ct": lookupByClass(competitionElement, "tag").value
   });
 
-  code(lookup(competitionElement, "code"), data);
+  code(lookupByClass(competitionElement, "code"), data);
 
   debounce(() => {
     updateEggs();
@@ -150,20 +144,20 @@ function updateEgg(eggElement) {
   let competitionElement = document.getElementById("competition");
 
   let data = JSON.stringify({
-    "cd": lookup(competitionElement, "description").value,
-    "ct": lookup(competitionElement, "tag").value,
-    "ed": lookup(eggElement, "description").value,
-    "et": lookup(eggElement, "tag").value
+    "cd": lookupByClass(competitionElement, "description").value,
+    "ct": lookupByClass(competitionElement, "tag").value,
+    "ed": lookupByClass(eggElement, "description").value,
+    "et": lookupByClass(eggElement, "tag").value
   });
 
-  code(lookup(eggElement, "code"), data);
+  code(lookupByClass(eggElement, "code"), data);
 }
 
 function updateEggs() {
   let eggsElement = document.getElementById("eggs");
 
   Array.from(eggsElement.getElementsByClassName("code")).forEach((codeElement) => {
-    let eggElement = codeElement.parentNode;
+    let eggElement = codeElement.parentNode.parentNode.parentNode;
 
     if (!eggElement.classList.contains("template")) {
       updateEgg(eggElement);
@@ -175,20 +169,20 @@ function updateHunter(hunterElement) {
   let competitionElement = document.getElementById("competition");
 
   let data = JSON.stringify({
-    "cd": lookup(competitionElement, "description").value,
-    "ct": lookup(competitionElement, "tag").value,
-    "hd": lookup(hunterElement, "description").value,
-    "ht": lookup(hunterElement, "tag").value
+    "cd": lookupByClass(competitionElement, "description").value,
+    "ct": lookupByClass(competitionElement, "tag").value,
+    "hd": lookupByClass(hunterElement, "description").value,
+    "ht": lookupByClass(hunterElement, "tag").value
   });
 
-  code(lookup(hunterElement, "code"), data);
+  code(lookupByClass(hunterElement, "code"), data);
 }
 
 function updateHunters() {
   let huntersElement = document.getElementById("hunters");
 
   Array.from(huntersElement.getElementsByClassName("code")).forEach((codeElement) => {
-    let hunterElement = codeElement.parentNode;
+    let hunterElement = codeElement.parentNode.parentNode.parentNode;
 
     if (!hunterElement.classList.contains("template")) {
       updateHunter(hunterElement);
@@ -200,5 +194,4 @@ window.addEventListener("load", (event) => {
   initCompetition();
   initEggs();
   initHunters();
-  initNavigation();
 });
